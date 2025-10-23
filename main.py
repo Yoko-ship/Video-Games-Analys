@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
 
 class Games:
@@ -29,6 +32,16 @@ class Games:
         plt.plot(x,y,color="green",marker='o',markersize=4,linewidth=2)
         plt.grid(True,linestyle='-',alpha=0.6)
         plt.show()
+
+    def k_Nearest_Neighbor(self):
+        initial_x = self.cleanned[["Global_Sales","NA_Sales","EU_Sales","JP_Sales","Other_Sales"]].astype(np.int64)
+        X = initial_x[self.cleanned['Global_Sales'] > 3]
+        y = self.cleanned.loc[self.cleanned["Global_Sales"] > 3,"Genre"]
+
+
+        knn2 = KNeighborsClassifier(n_neighbors=5)
+        knn2.fit(X.values,y)
+        res = knn2.predict(np.array([[40,29,3,6,0]]).reshape(1,-1))
 
 
     def handle_data(self):
@@ -61,6 +74,7 @@ class Games:
         self.draw_bar_chart(top_popular_genres_global,"Platform","Global_Sales","Платформа","Количество уникальных продаваемых игр по платформам","Топ платформ с 1980 - 2020")
         self.draw_bar_chart(genre_games,"Genre","Name","Жанр","Количество","Количество выпущенных игр по жанру с 1980 - 2020")
 
+        self.k_Nearest_Neighbor()
 
 if __name__ == "__main__":
     df = Games()
